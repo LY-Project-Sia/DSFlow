@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080808"><title>DragonSmashPH — Admin Portal</title>
+<link rel="icon" href="assets/dragonsmash-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <img src="assets/dragonsmash-logo.png" alt="DragonSmashPH">
+    <div class="eyebrow">STAFF CONTROL CENTER</div><h1>ADMIN<br><em>PORTAL.</em></h1>
+    <p>Manage bookings, courts, customers, pricing, operating hours, reports and website settings.</p>
+    <form id="loginForm"><label>USERNAME<input id="loginUser" autocomplete="username" required></label><label>PASSWORD<input id="loginPass" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">SIGN IN →</button></form>
+    <div class="demo-note">Demo credentials are shown in README.md. Change them in <code>admin.js</code> before deployment.</div>
+    <a class="back" href="index.html">← BACK TO WEBSITE</a>
+  </div>
+</div>
+<div id="app" class="app hidden">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><img src="assets/dragonsmash-logo.png"><span>CONTROL CENTER</span></div>
+    <nav>
+      <button class="side active" data-page="dashboard">⌂ <span>Dashboard</span></button>
+      <button class="side" data-page="bookings">▣ <span>Bookings</span><b id="pendingBadge">0</b></button>
+      <button class="side" data-page="calendar">◫ <span>Calendar</span></button>
+      <button class="side" data-page="courts">▦ <span>Courts</span></button>
+      <button class="side" data-page="customers">♙ <span>Customers</span></button>
+      <button class="side" data-page="messages">✉ <span>Messages</span><b id="messageBadge">0</b></button>
+      <button class="side" data-page="reports">▤ <span>Reports</span></button>
+      <button class="side" data-page="settings">⚙ <span>Settings</span></button>
+    </nav>
+    <div class="sidebar-bottom"><a href="index.html">↗ VIEW WEBSITE</a><button id="logout">↪ LOG OUT</button></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><button id="mobileMenu" class="mobile-menu">☰</button><div><span class="eyebrow">DRAGONSMASHPH</span><h2 id="pageTitle">Dashboard</h2></div><div class="top-actions"><span id="clock"></span><button id="quickBook" class="primary small">+ NEW BOOKING</button></div></header>
+
+    <section class="page active" id="page-dashboard">
+      <div class="welcome"><div><span class="eyebrow">TODAY'S CONTROL ROOM</span><h1>GOOD DAY,<br><em>DRAGON.</em></h1><p>Everything you need to operate the center from one place.</p></div><div class="date-box"><span id="todayLabel"></span><strong id="todayBookings">0</strong><small>BOOKINGS TODAY</small></div></div>
+      <div class="stats"><article><span>REVENUE</span><strong id="statRevenue">₱0</strong><small>confirmed bookings</small></article><article><span>BOOKINGS</span><strong id="statBookings">0</strong><small>all reservations</small></article><article><span>ACTIVE COURTS</span><strong id="statCourts">18</strong><small>12 badminton / 6 pickleball</small></article><article><span>CUSTOMERS</span><strong id="statCustomers">0</strong><small>unique contacts</small></article></div>
+      <div class="grid-2"><div class="panel"><div class="panel-head"><h3>Today's Schedule</h3><button class="ghost" data-page-jump="calendar">VIEW CALENDAR →</button></div><div id="dashboardSchedule"></div></div><div class="panel"><div class="panel-head"><h3>Quick Actions</h3></div><div class="quick-grid"><button data-action="new">＋ CREATE BOOKING</button><button data-page-jump="courts">▦ MANAGE COURTS</button><button data-page-jump="reports">▤ VIEW REPORTS</button><button data-page-jump="settings">⚙ SITE SETTINGS</button></div></div></div>
+      <div class="panel"><div class="panel-head"><h3>Recent Activity</h3><button class="ghost" data-page-jump="bookings">VIEW ALL →</button></div><div id="activityFeed"></div></div>
+    </section>
+
+    <section class="page" id="page-bookings"><div class="page-head"><div><span class="eyebrow">OPERATIONS / 01</span><h1>BOOKINGS</h1></div><button class="primary" data-action="new">+ NEW BOOKING</button></div><div class="filters"><input id="bookingSearch" placeholder="Search name, confirmation, phone..."><select id="bookingStatus"><option value="all">ALL STATUS</option><option value="pending">PENDING</option><option value="confirmed">CONFIRMED</option><option value="completed">COMPLETED</option><option value="cancelled">CANCELLED</option></select><select id="bookingSport"><option value="all">ALL SPORTS</option><option>Badminton</option><option>Pickleball</option></select><input id="bookingDate" type="date"><button class="ghost" id="clearFilters">CLEAR</button></div><div class="panel table-panel"><table><thead><tr><th>CONFIRMATION</th><th>CUSTOMER</th><th>SPORT / COURT</th><th>DATE / TIME</th><th>PLAYERS</th><th>TOTAL</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="bookingTable"></tbody></table></div></section>
+
+    <section class="page" id="page-calendar"><div class="page-head"><div><span class="eyebrow">OPERATIONS / 02</span><h1>MASTER CALENDAR</h1></div><div class="inline"><input id="adminCalendarDate" type="date"><select id="adminCalendarSport"><option>Badminton</option><option>Pickleball</option></select></div></div><div class="calendar-panel panel"><div id="adminCalendar"></div></div></section>
+
+    <section class="page" id="page-courts"><div class="page-head"><div><span class="eyebrow">OPERATIONS / 03</span><h1>COURTS</h1></div><div class="inline"><button class="ghost" id="activateAll">ACTIVATE ALL</button><button class="ghost" id="disableAll">DISABLE ALL</button></div></div><div class="court-admin-grid" id="courtAdminGrid"></div></section>
+
+    <section class="page" id="page-customers"><div class="page-head"><div><span class="eyebrow">CRM / 01</span><h1>CUSTOMERS</h1></div></div><div class="filters"><input id="customerSearch" placeholder="Search customer, phone, email..."></div><div class="panel table-panel"><table><thead><tr><th>CUSTOMER</th><th>PHONE</th><th>EMAIL</th><th>BOOKINGS</th><th>SPEND</th><th>LAST VISIT</th></tr></thead><tbody id="customerTable"></tbody></table></div></section>
+
+    <section class="page" id="page-messages"><div class="page-head"><div><span class="eyebrow">CRM / 02</span><h1>MESSAGES</h1></div><button class="ghost" id="markAllRead">MARK ALL READ</button></div><div id="messageList" class="message-list"></div></section>
+
+    <section class="page" id="page-reports"><div class="page-head"><div><span class="eyebrow">ANALYTICS</span><h1>REPORTS</h1></div><div class="inline"><button class="primary small" id="exportCsv">EXPORT CSV</button><button class="ghost" id="exportJson">BACKUP JSON</button></div></div><div class="stats report-stats"><article><span>TOTAL REVENUE</span><strong id="reportRevenue">₱0</strong></article><article><span>CONFIRMED</span><strong id="reportConfirmed">0</strong></article><article><span>CANCELLED</span><strong id="reportCancelled">0</strong></article><article><span>AVG. BOOKING</span><strong id="reportAverage">₱0</strong></article></div><div class="grid-2"><div class="panel"><div class="panel-head"><h3>Sport Performance</h3></div><div id="sportReport"></div></div><div class="panel"><div class="panel-head"><h3>Top Courts</h3></div><div id="courtReport"></div></div></div></section>
+
+    <section class="page" id="page-settings"><div class="page-head"><div><span class="eyebrow">SYSTEM</span><h1>SETTINGS</h1></div><button class="primary" id="saveSettings">SAVE SETTINGS</button></div><div class="settings-grid"><div class="panel"><div class="panel-head"><h3>Pricing</h3></div><label>BADMINTON / COURT / SESSION<input id="setBadminton" type="number"></label><label>PICKLEBALL / COURT / SESSION<input id="setPickleball" type="number"></label><label>ENTRANCE / PERSON<input id="setEntrance" type="number"></label></div><div class="panel"><div class="panel-head"><h3>Operating Hours</h3></div><label>OPEN TIME<input id="setOpen" type="time"></label><label>CLOSE TIME<input id="setClose" type="time"></label><label>CONTACT EMAIL<input id="setEmail" type="email"></label></div><div class="panel"><div class="panel-head"><h3>Admin Security</h3></div><label>NEW ADMIN USERNAME<input id="newAdminUser"></label><label>NEW ADMIN PASSWORD<input id="newAdminPass" type="password"></label><button class="ghost" id="changeAdmin">UPDATE LOGIN</button><p class="danger-note">Frontend demo credentials are stored locally. Use server-side authentication before public deployment.</p></div><div class="panel"><div class="panel-head"><h3>Data Management</h3></div><button class="ghost wide" id="seedDemo">LOAD DEMO DATA</button><button class="ghost wide" id="clearBookings">DELETE ALL BOOKINGS</button><button class="ghost wide danger" id="resetAll">RESET ALL LOCAL DATA</button></div></div></section>
+  </main>
+</div>
+<div class="modal hidden" id="modal"><div class="modal-card"><button class="modal-close" id="modalClose">×</button><div id="modalContent"></div></div></div><div class="toast" id="toast"></div>
+<script src="admin.js"></script>
+</body></html>
